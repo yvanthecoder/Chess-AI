@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Chess AI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta
+          name="description"           
+          content="A simple chess AI.">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+            crossorigin="anonymous">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="css/main.css">
+
+        <!-- Google Icons (Material Design) -->
+        <link rel="stylesheet" 
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            crossorigin="anonymous">
+
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/5b14db5f0b.js" crossorigin="anonymous"></script>
+
+        <!-- jQuery --> 
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous">
+        </script>
+
+        <!-- Chessboard JS -->
+        <link rel="stylesheet"
+            href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
+            integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
+            crossorigin="anonymous">
+        <script defer src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
+            integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
+            crossorigin="anonymous"></script>
+
+        <!-- Chess JS (slightly modified) -->
+        <script defer src="js/chess.js"></script>
+        </script>
+
+        <!-- Bootstrap JS --> 
+        <script defer
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" 
+            integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" 
+            crossorigin="anonymous">
+        </script>
+
+        <!-- Custom JS -->
+        <script defer src="js/main.js"></script>
+    </head>
+    <body class="bg-dark text-light">
+        <main>
+            <div class="container py-5">
+
+                <div class="row">
+                    <div class="col-lg-4 mb-4">
+                        <div class="card shadow-lg bg-secondary text-light mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title mb-3">Paramètres</h4>
+                                <div class="form-group">
+                                    <label for="search-depth">Profondeur (Noir)</label>
+                                    <select id="search-depth" class="form-control bg-dark text-light border-0">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected>3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="search-depth-white">Profondeur (Blanc)</label>
+                                    <select id="search-depth-white" class="form-control bg-dark text-light border-0">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected>3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="showHint" name="showHint">
+                                    <label class="form-check-label" for="showHint">Afficher le coup suggéré (Blanc)</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="card shadow-lg bg-secondary text-light mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title mb-3">AI vs AI</h4>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-success flex-fill mr-2" id="compVsCompBtn"><i class="fas fa-play"></i></button>
+                                    <button class="btn btn-danger flex-fill ml-2" id="resetBtn"><i class="fas fa-stop"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow-lg bg-secondary text-light mb-4">
+                            <div class="card-body text-center">
+                                <h5 class="mb-2">Performances</h5>
+                                <div class="mb-1"><span id="position-count">0</span> positions évaluées</div>
+                                <div class="mb-1">en <span id="time">0</span>s</div>
+                                <div class="mb-1"><span id="positions-per-s">0</span> positions/s</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card shadow-lg bg-dark text-light mb-4">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-center mb-3">
+                                    <div id="myBoard" class="mx-auto"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button class="btn btn-outline-warning" id="undoBtn"><i class="fas fa-undo"></i> Annuler le coup</button>
+                                    <button class="btn btn-outline-success" id="redoBtn"><i class="fas fa-redo"></i> Refaire le match</button>
+                                </div>
+                                <div class="mb-4">
+                                    <h4 class="mb-2">Evaluation</h4>
+                                    
+                                    <div class="progress" style="height: 14px; background: #222; border-radius: 8px; box-shadow: none;">
+                                        <div class="progress-bar" 
+                                            role="progressbar" aria-valuenow="0" style="width: 50%; background: linear-gradient(90deg, #bbb, #444); border-radius: 8px; box-shadow: none;"
+                                            aria-valuemin="-2000" aria-valuemax="4000" id='advantageBar'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="mb-2">Statut</h4>
+                                    <p><span id="status">Aucun échec, mat ou nul.</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
